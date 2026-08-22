@@ -10,6 +10,11 @@
 
 ## 0. 환경 준비
 
+0-a. **커넥터 자가점검(가장 먼저).** Google Drive 와 WordPress 커넥터 도구가 이 세션에 있는지 확인한다.
+   둘 중 하나라도 없으면, 조용히 실패하지 말고 **즉시 사장님께 알린다**:
+   "오늘 자동 발행이 커넥터 없이 떠서 진행 불가 — 이 세션을 열어 수동으로 한 번 돌려야 함." 그리고 중단.
+   (SendUserFile/텍스트 알림은 커넥터 없이도 가능하다.)
+
 1. 지금 세션은 `bighitcho/blog-assets` 레포가 이미 클론돼 있거나, 없으면 클론한다:
    `git clone --depth 1 https://github.com/bighitcho/blog-assets /home/user/blog-assets` (약 20초).
    `cd /home/user/blog-assets/pipeline`.
