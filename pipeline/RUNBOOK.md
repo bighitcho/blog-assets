@@ -71,6 +71,11 @@ cd pipeline
 공개 URL = `https://raw.githubusercontent.com/bighitcho/blog-assets/master/batch_YYYYMMDD/<blog>_<slug>.png`
 원고 HTML의 `{{THUMB_URL}}` 를 이 URL로 치환한다. (워드프레스 글도 이 URL을 본문 상단 이미지로 쓴다.)
 
+**폴백:** 만약 `git push` 가 인증 문제로 막히면, 대신 PNG를 base64로 인코딩해
+WordPress `media.create`(wpcom_site `mydooba.com`, `file_content_base64`, `mime_type` "image/png",
+`user_confirmed` true)로 업로드하고, 반환된 미디어 URL(wp.com CDN)을 `{{THUMB_URL}}` 로 쓴다.
+이 URL도 블로그스팟·워드프레스 양쪽에서 정상 임베드된다.
+
 ### 2-4. 구조화데이터+바이라인 붙이기(enrich)
 파이썬에서:
 ```
