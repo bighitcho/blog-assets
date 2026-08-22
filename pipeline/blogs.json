@@ -1,0 +1,119 @@
+{
+  "blogs": [
+    {
+      "key": "goldnforest",
+      "name": "goldnforest",
+      "blog_id": "2749480142980571635",
+      "url": "https://www.goldnforest.com/",
+      "blogspot": "goldnforest.blogspot.com",
+      "theme": "잡블 / 여행, 뷰티, 생활",
+      "is_main_adsense": true,
+      "note": "메인 애드센스 도메인 (연결도메인 www.goldnforest.com)"
+    },
+    {
+      "key": "siangold",
+      "name": "siangold",
+      "blog_id": "5560889135673936694",
+      "url": "https://siangold.blogspot.com/",
+      "blogspot": "siangold.blogspot.com",
+      "theme": "잡블 / 경제, 정부",
+      "is_main_adsense": false
+    },
+    {
+      "key": "jenyjelly",
+      "name": "jenyjelly",
+      "blog_id": "7553923506649473804",
+      "url": "https://jenyjelly.blogspot.com/",
+      "blogspot": "jenyjelly.blogspot.com",
+      "theme": "잡블 / 쇼핑링크",
+      "is_main_adsense": false
+    },
+    {
+      "key": "tera-company",
+      "name": "tera-company",
+      "blog_id": "9157497844810159923",
+      "url": "https://tera-company.blogspot.com/",
+      "blogspot": "tera-company.blogspot.com",
+      "theme": "해외픽션",
+      "is_main_adsense": false
+    },
+    {
+      "key": "golden628",
+      "name": "golden628",
+      "blog_id": "1252899051121463219",
+      "url": "https://golden628.blogspot.com/",
+      "blogspot": "golden628.blogspot.com",
+      "theme": "잡블 / AI, IT",
+      "is_main_adsense": false
+    },
+    {
+      "key": "wwwesg",
+      "name": "wwwesg",
+      "blog_id": "1755227956626891008",
+      "url": "https://wwwesg.blogspot.com/",
+      "blogspot": "wwwesg.blogspot.com",
+      "theme": "국제기구의 ESG 및 환경, 무역 정책",
+      "is_main_adsense": false
+    },
+    {
+      "key": "greencap",
+      "name": "국제청소년ESG협회 그린캡",
+      "blog_id": "4841756082069499520",
+      "url": "https://www.greencap.or.kr/",
+      "blogspot": "esg-greencap.blogspot.com",
+      "theme": "청소년 ESG·SDGs 교육 및 활동",
+      "is_main_adsense": false,
+      "note": "협회 공식 홈페이지 (연결도메인 www.greencap.or.kr)"
+    },
+    {
+      "key": "house-sunyhill",
+      "name": "house-sunyhill",
+      "blog_id": "4509202138941586821",
+      "url": "https://house-sunyhill.blogspot.com/",
+      "blogspot": "house-sunyhill.blogspot.com",
+      "theme": "내 집 마련·주거 실전 (청약·전세·대출·인테리어)",
+      "is_main_adsense": false,
+      "note": "2026-08-15 신설, 니치 전문"
+    },
+    {
+      "key": "car-sunyhill",
+      "name": "car-sunyhill",
+      "blog_id": "3519848563385739600",
+      "url": "https://car-sunyhill.blogspot.com/",
+      "blogspot": "car-sunyhill.blogspot.com",
+      "theme": "자동차 유지비·초보운전 (보험·정비·중고차)",
+      "is_main_adsense": false,
+      "note": "2026-08-15 신설, 니치 전문"
+    },
+    {
+      "key": "well-sunyhill",
+      "name": "well-sunyhill",
+      "blog_id": "4129089001863723768",
+      "url": "https://well-sunyhill.blogspot.com/",
+      "blogspot": "well-sunyhill.blogspot.com",
+      "theme": "4050 생활 건강 루틴 (수면·스트레칭·식습관) — 의학 단정 금지",
+      "is_main_adsense": false,
+      "note": "2026-08-15 신설, 니치 전문"
+    },
+    {
+      "key": "pet-sunyhill",
+      "name": "pet-sunyhill",
+      "blog_id": "5417091960053665298",
+      "url": "https://pet-sunyhill.blogspot.com/",
+      "blogspot": "pet-sunyhill.blogspot.com",
+      "theme": "반려동물 초보 집사 가이드 (비용·용품·행동)",
+      "is_main_adsense": false,
+      "note": "2026-08-15 신설, 니치 전문"
+    },
+    {
+      "key": "hobbyapp",
+      "name": "하비앱",
+      "blog_id": "241639632967282794",
+      "url": "https://hobbyapp.blogspot.com/",
+      "blogspot": "hobbyapp.blogspot.com",
+      "theme": "주말 취미 입문 + 도움 앱 (실습 후기 중심)",
+      "is_main_adsense": false,
+      "note": "2026-08-15 신설, 니치 전문"
+    }
+  ]
+}
