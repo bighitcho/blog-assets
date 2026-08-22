@@ -97,6 +97,10 @@ final = enrich(html, {"title":제목,"search_description":80~160자 요약,
 - **워드프레스(mydooba/sunyhill):** content-authoring `posts.create`,
   params `{"title":제목,"content":final,"status":"draft","tags":[태그...],"user_confirmed":true}`.
   반환된 post id 와 preview/edit 링크 기록.
+  ⚠️ **한글 깨짐 방지(필수):** 본문은 반드시 파일로 써 두고(Write) 그 내용을 그대로 넣는다. 넣은 뒤
+  `posts.get`(context=edit)으로 재조회해, 저장된 content 가 넣은 파일과 **글자 그대로 일치**하는지
+  (혹은 원문의 부분수열인지) 확인한다. 한 글자라도 다른 음절로 바뀌었으면(예: 눅눅→눈눈) 다시 넣는다.
+  본문을 기억에 의존해 재입력하거나 \u 이스케이프를 손으로 계산하지 말 것 — 그게 깨짐의 원인이다.
 
 ### 2-6. 미리보기 렌더
 `node preview_render.cjs <final.html파일> "<제목>" /home/user/blog-assets/batch_YYYYMMDD/<blog>_preview.png`
