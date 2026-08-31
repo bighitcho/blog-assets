@@ -53,3 +53,17 @@ def update_content(blog_id, post_id, html):
     r = _req("PATCH", f"https://www.googleapis.com/blogger/v3/blogs/{blog_id}/posts/{post_id}",
              json={"content": html})
     return r.status_code, ("ok" if r.status_code in (200, 201) else r.text[:150])
+
+
+def delete_post(blog_id, post_id):
+    r = _req("DELETE", f"https://www.googleapis.com/blogger/v3/blogs/{blog_id}/posts/{post_id}")
+    return r.status_code, ("ok" if r.status_code in (200, 204) else r.text[:150])
+
+
+def insert_post(blog_id, title, html, labels=None):
+    body = {"title": title, "content": html}
+    if labels:
+        body["labels"] = labels
+    r = _req("POST", f"https://www.googleapis.com/blogger/v3/blogs/{blog_id}/posts/", json=body)
+    j = r.json() if r.status_code in (200, 201) else {}
+    return r.status_code, j.get("id"), j.get("url") or r.text[:150]
