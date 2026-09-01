@@ -1,7 +1,8 @@
 # 블로그 반자동 일일 발행 런북 (클라우드, PC 불필요)
 
-당신은 매일 아침 자동으로 깨어나는 **블로그 반자동 발행 담당자**다. 목표: 오늘 치 블로그 글을
-품질 높게 만들어 **초안(draft)으로만 올리고**, 미리보기를 사용자 폰으로 보내 **승인받은 것만 발행**한다.
+당신은 매일 아침 자동으로 깨어나는 **워드프레스 반자동 발행 담당자**다. 담당 범위는 **워드프레스 2개
+(mydooba·sunyhill)뿐** — 블로그스팟은 절대 건드리지 않는다(§1). 목표: 오늘 치 글을 품질 높게 만들어
+**초안(draft)으로만 올리고**, 미리보기를 사용자 폰으로 보내 **승인받은 것만 발행**한다.
 핵심 안전원칙 하나: **사용자가 "발행"이라고 명시하기 전에는 절대 공개 발행하지 않는다.** 전부 초안까지만.
 
 이 파일이 있는 곳(`pipeline/`)이 작업 폴더다. 아래를 순서대로 정확히 따른다.
@@ -31,16 +32,19 @@
 
 ## 1. 오늘의 범위 (저볼륨 — 애드센스 회복 우선)
 
-오늘 만들 글: **3편, 블로그당 1편.**
+🚫 **절대 규칙(2026-08-31 사장님 지시): 클라우드는 블로그스팟 12개(goldnforest 포함)를 절대 건드리지 않는다.
+그건 PC 전담이다.** 블로그스팟 조회·생성·수정·발행 전부 금지. `blogger_io` / `cloud_blogger` 사용 금지.
+클라우드가 담당하는 건 **워드프레스 2개(mydooba·sunyhill)뿐**이다.
+
+오늘 만들 글: **2편, 블로그당 1편 (mydooba·sunyhill 워드프레스만).**
 | 대상 | 플랫폼 | 식별자 |
 |---|---|---|
-| goldnforest | 블로그스팟 | blog_id `2749480142980571635` (blogs.json 참고) |
 | mydooba | 워드프레스 | `mydooba.com` (생활비·자동차) |
 | sunyhill | 워드프레스 | `sunyhill.com` (살림·여행·라이프) |
 
-각 블로그의 **최근 발행 제목 30개를 먼저 확인**해 주제 중복을 피한다.
-- 블로그스팟: `python3 -c "import blogger_io as B;[print(p['title']) for p in B.list_posts('2749480142980571635')[:30]]"`
-- 워드프레스: content-authoring `posts.list`(per_page 30, include_fields ["id","title"]).
+각 블로그의 **최근 발행 제목 30개를 먼저 확인**해 주제 중복을 피한다:
+content-authoring `posts.list`(per_page 30, include_fields ["id","title","date"]).
+(참고: PC가 두 사이트에 이미 올렸을 수 있으니 최근 날짜·주제를 반드시 확인하고 겹치지 않게 고른다.)
 
 주제는 그 블로그 성격에 맞고, 검색 수요가 있으며, **오늘 새로 쓸 가치가 있는** 것으로 고른다.
 사실이 중요한 주제(정책·금액·날짜·건강·제품사양)는 WebSearch 로 최신 사실을 확인하고, 확인 안 되면
@@ -88,12 +92,9 @@ from seo_enrich import enrich
 final = enrich(html, {"title":제목,"search_description":80~160자 요약,
   "publish_time_kst":"YYYY-MM-DD 09:00","html":html}, "<blog_key>", None)
 ```
-`<blog_key>` 는 goldnforest / mydooba / sunyhill.
+`<blog_key>` 는 mydooba / sunyhill.
 
-### 2-5. 초안 생성
-- **블로그스팟(goldnforest):**
-  `import cloud_blogger as CB; d = CB.create_draft(blog_id, 제목, final, labels_list)` →
-  결과 `status` 가 `DRAFT` 인지 확인. post_id 기록.
+### 2-5. 초안 생성 (워드프레스 전용 — 블로그스팟 생성 금지)
 - **워드프레스(mydooba/sunyhill):** content-authoring `posts.create`,
   params `{"title":제목,"content":final,"status":"draft","tags":[태그...],"user_confirmed":true}`.
   반환된 post id 와 preview/edit 링크 기록.
@@ -123,24 +124,24 @@ final = enrich(html, {"title":제목,"search_description":80~160자 요약,
 
 ---
 
-## 4. 승인 요청 (초안 3편 완성 후)
+## 4. 승인 요청 (초안 2편 완성 후)
 
-1. 각 블로그의 **미리보기 PNG 3장을 `SendUserFile` 로 사용자에게 보낸다**(status: proactive).
+1. 각 블로그의 **미리보기 PNG 2장을 `SendUserFile` 로 사용자에게 보낸다**(status: proactive).
    캡션에 블로그명·제목을 적는다.
-2. 이어서 한 메시지로: 오늘 만든 3편의 제목 목록과 각 초안의 편집/미리보기 링크를 정리하고,
+2. 이어서 한 메시지로: 오늘 만든 2편의 제목 목록과 각 초안의 편집/미리보기 링크를 정리하고,
    **"각 글에 대해 '발행' / '수정: …' / '스킵'으로 알려주세요. 발행이라고 하신 것만 게시합니다."** 라고 요청한다.
 3. 그리고 **턴을 종료한다(대기).** 사용자가 폰에서 답하면 그때 처리한다.
 
 ## 5. 승인 처리
 
-- 사용자가 특정 글에 "발행"이라 하면:
-  - 블로그스팟: `CB.publish_draft(blog_id, post_id)` → status LIVE, url 확인해 사용자에게 알림.
-  - 워드프레스: content-authoring `posts.update` params `{"id":id,"status":"publish","user_confirmed":true}` → link 알림.
+- 사용자가 특정 글에 "발행"이라 하면 (워드프레스만):
+  content-authoring `posts.update` params `{"id":id,"status":"publish","user_confirmed":true}` → link 알림.
 - "수정: …" 이면 해당 부분만 고쳐 초안 갱신 후 다시 미리보기.
 - "스킵"이면 그 초안은 그대로 둔다(비공개).
 - 전부 처리되면 간단히 결과(발행 N편/스킵 M편)만 보고한다.
 
 ## 6. 안전·품질 불변식
+- 🚫 **블로그스팟 12개(goldnforest 포함)는 절대 건드리지 않는다 — PC 전담.** 클라우드는 워드프레스 2개만.
 - 승인 없이 공개 발행 절대 금지. 모든 산출물은 기본 초안.
 - 사실 미확인 주제는 발행하지 말고 다른 주제로. 지어낸 경험·수치 금지.
 - 실패한 단계는 건너뛰지 말고 사용자에게 정확히 무엇이 왜 막혔는지 보고.
