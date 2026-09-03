@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260903/mydooba_chuseok-toll-2026.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260903_160128_742ac542-e941-4881-8a5a-4173aef0138d.png",
+ "spec": {
+  "kicker": "2026 추석 연휴 고속도로",
+  "title": "통행료 면제 **나흘**\n유료인 날은 **하루**",
+  "hook": "9/24~27 면제 · 28일만 부과",
+  "brand": "mydooba.com",
+  "template": 0,
+  "palette": 0,
+  "blur": 4,
+  "dim": 0.55
+ }
+}
