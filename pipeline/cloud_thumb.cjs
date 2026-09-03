@@ -62,7 +62,8 @@ function buildHtml(spec) {
   const P = PALETTES[pi];
   const cleanT = (spec.title || "").replace(/\*\*/g, "");
   const isLatin = /^[\x00-\x7F\u2013\u2014\u2018\u2019\u201C\u201D\u00B7]*$/.test(cleanT);
-  const disp = isLatin ? "'Anton'" : DISPLAY[(pi + ti) % DISPLAY.length];
+  const disp = isLatin ? "'Noto Sans KR'" : DISPLAY[(pi + ti) % DISPLAY.length];
+  const wt = isLatin ? "900" : "normal";
   const kicker = esc(spec.kicker || "");
   const brand = esc(spec.brand || "");
   const hook = esc(spec.hook || "");
@@ -72,7 +73,7 @@ function buildHtml(spec) {
    em{font-style:normal;color:${P.accent}}
    .brand{position:absolute;bottom:44px;left:80px;font:900 26px 'Noto Sans KR';letter-spacing:1px;opacity:.9}
    .kick{display:inline-block;font:900 26px 'Noto Sans KR';color:#111;background:${P.accent};padding:8px 18px;border-radius:999px;letter-spacing:1px}
-   .hook{display:inline-block;font:normal 64px ${disp},'Noto Sans KR';color:#111;background:${P.accent};padding:6px 28px;border-radius:18px;box-shadow:${shadow};line-height:1.15}
+   .hook{display:inline-block;font:${wt} 64px ${disp},'Noto Sans KR';color:#111;background:${P.accent};padding:6px 28px;border-radius:18px;box-shadow:${shadow};line-height:1.15}
    ${deco(P)}`;
 
   let layout, inner;
@@ -80,7 +81,7 @@ function buildHtml(spec) {
     const FS = fontFor(spec.title, 980);
     layout = `${common}
      .wrap{position:absolute;left:80px;top:74px;right:80px}
-     h1{font:normal ${FS}px ${disp},'Noto Sans KR';line-height:1.18;letter-spacing:-1px;text-shadow:${shadow};margin-top:26px}
+     h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.18;letter-spacing:-1px;text-shadow:${shadow};margin-top:26px}
      .hk{position:absolute;right:80px;bottom:44px}`;
     inner = `<div class="c1"></div><div class="c2"></div><div class="wrap"><span class="kick">${kicker}</span><h1>${title}</h1></div>${hook?`<div class="hk"><span class="hook">${hook}</span></div>`:""}<div class="brand">${brand}</div>`;
   } else if (ti === 1) {
@@ -89,15 +90,15 @@ function buildHtml(spec) {
     layout = `${common}
      .grid{position:absolute;inset:0;display:grid;grid-template-columns:62% 38%}
      .l{padding:70px 40px 70px 80px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
-     h1{font:normal ${FS}px ${disp},'Noto Sans KR';line-height:1.18;letter-spacing:-1px;text-shadow:${shadow};margin-top:22px}
+     h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.18;letter-spacing:-1px;text-shadow:${shadow};margin-top:22px}
      .r{display:flex;align-items:center;justify-content:center;padding:40px 60px 40px 10px}
-     .big{font:normal ${bigPx}px ${disp},'Noto Sans KR';color:${P.accent};text-shadow:${shadow};text-align:center;line-height:1.05;transform:rotate(-4deg)}`;
+     .big{font:${wt} ${bigPx}px ${disp},'Noto Sans KR';color:${P.accent};text-shadow:${shadow};text-align:center;line-height:1.05;transform:rotate(-4deg)}`;
     inner = `<div class="c1"></div><div class="c2"></div><div class="grid"><div class="l"><span class="kick">${kicker}</span><h1>${title}</h1></div><div class="r">${hook?`<div class="big">${hook}</div>`:""}</div></div><div class="brand">${brand}</div>`;
   } else if (ti === 2) {
     const FS = fontFor(spec.title, 1000);
     layout = `${common}
      .wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 80px}
-     h1{font:normal ${FS}px ${disp},'Noto Sans KR';line-height:1.16;letter-spacing:-1px;text-shadow:${shadow};margin:26px 0}
+     h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.16;letter-spacing:-1px;text-shadow:${shadow};margin:26px 0}
      .brand{left:0;right:0;text-align:center}`;
     inner = `<div class="c1"></div><div class="c2"></div><div class="stripe"></div><div class="stripe2"></div><div class="wrap"><span class="kick">${kicker}</span><h1>${title}</h1>${hook?`<span class="hook">${hook}</span>`:""}</div><div class="brand">${brand}</div>`;
   } else {
@@ -105,7 +106,7 @@ function buildHtml(spec) {
     layout = `${common}
      .card{position:absolute;left:64px;top:64px;right:64px;bottom:64px;background:rgba(0,0,0,.28);border:2px solid rgba(255,255,255,.14);border-radius:28px;padding:56px 64px 56px 80px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
      .card:before{content:"";position:absolute;left:0;top:64px;bottom:64px;width:14px;background:${P.accent};border-radius:0 8px 8px 0}
-     h1{font:normal ${FS}px ${disp},'Noto Sans KR';line-height:1.18;letter-spacing:-1px;text-shadow:${shadow};margin-top:22px}
+     h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.18;letter-spacing:-1px;text-shadow:${shadow};margin-top:22px}
      .hk{margin-top:30px}
      .brand{left:auto;right:100px;bottom:92px}`;
     inner = `<div class="c1"></div><div class="c2"></div><div class="card"><span class="kick">${kicker}</span><h1>${title}</h1>${hook?`<div class="hk"><span class="hook">${hook}</span></div>`:""}</div><div class="brand">${brand}</div>`;
