@@ -281,7 +281,21 @@ PC 세션에서 `daily_run.py` 프롬프트의 "먼저 읽어라" 목록에 이 
 - [ ] 본문 해시태그 없음, 정형 소제목 없음, AI 티 표현(§3) 없음
 - [ ] 한글 깨짐 검수(§8) 완료
 
-### 썸네일 v2 규칙
-`cloud_thumb.cjs` 는 v2다(진한 배경 + 큰 훅 배지). spec 에 **hook 필수**(숫자·날짜 한 줄), title 에 `**강조**` 1곳, 2~3줄.
-만든 뒤 Read 로 열어 본다. 글자가 작거나 밋밋하면 template(0~3)/palette(0~5)를 바꿔 다시 만든다.
-연한 크림 배경·작은 글씨는 금지다(2026-09-03 사장님 지적).
+### 썸네일 v3 규칙 — 주제 이미지 배경 + 블러 + 텍스트 강조 (2026-09-03 사장님 지침)
+"PPT 같은" 단색·그라디언트 썸네일 금지. **주제에 맞는 생성 이미지를 배경에 깔고, 블러·어둡게 처리한 뒤 텍스트를 크게 얹는다.**
+
+절차 (클라우드 컨테이너는 이미지 CDN 접근이 막혀 있으므로 합성은 GitHub Actions에서 한다):
+1. **배경 생성**: Higgsfield 커넥터 `generate_image_batch`(model `soul_location`, aspect_ratio `16:9`, 글당 1장, 약 0.12크레딧).
+   프롬프트 공식: "<주제 장면>, <계절/시간대/조명>, editorial photograph, shallow depth of field, no text, no logos, no signs".
+   예) 온누리상품권 → "Korean traditional market street during Chuseok, stalls piled with apples, pears, gift boxes, warm lantern light, shoppers softly blurred, editorial photograph, no text"
+   `jobs_wait` 로 완료 확인 → `result_url` 확보.
+2. **합성 디스패치**: GitHub 커넥터 `actions_run_trigger`(owner bighitcho, repo blog-assets, workflow_id `thumb.yml`, ref master) inputs:
+   - `out`: `batch_YYYYMMDD/<blog>_<slug>.png`
+   - `bg_url`: 1번의 result_url
+   - `spec`: JSON 문자열 `{"kicker":..,"title":"..\n**강조**..","hook":"숫자·날짜","brand":..,"template":0~2,"palette":0~5,"blur":3~5,"dim":0.45~0.6}`
+3. `actions_list`(list_workflow_runs, resource_id thumb.yml)로 완료(success) 확인 → `cd /home/user/blog-assets && git pull` → Read 로 PNG 열어 확인.
+   글자가 안 읽히면 `dim` 을 올리거나 `template` 을 바꿔 다시 디스패치한다.
+4. 공개 URL = `https://raw.githubusercontent.com/bighitcho/blog-assets/master/<out>`. 배경 원본은 `<out>_bg.jpg` 로 같이 커밋된다.
+
+템플릿: 0 = 좌측 텍스트·우측 사진 살림 / 1 = 하단 텍스트·상단 사진 / 2 = 중앙 텍스트·가장자리 사진.
+로컬에서 배경 없이 돌리면(`bg` 생략) 그라디언트 폴백이 나오는데, 이건 **긴급 대체용**이지 기본이 아니다.
