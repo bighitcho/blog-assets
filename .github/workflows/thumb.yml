@@ -47,6 +47,7 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra >/dev/null
           npm i --no-save playwright@1.56.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null 2>&1
+          pip3 install -q pillow >/dev/null 2>&1 || python3 -m pip install -q pillow
       - name: Render
         if: steps.req.outputs.count != '0'
         run: |
@@ -54,7 +55,14 @@ jobs:
           for f in /tmp/req/*.json; do
             out=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).out' "$f")
             bg_url=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).bg_url||""' "$f")
+            mode=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).mode||"thumb"' "$f")
             mkdir -p "$(dirname "$out")"; bg=""
+            if [ "$mode" = "photo" ]; then
+              # 본문 사진: 합성 없이 내려받아 폭 1200px JPEG(q85)로 저장
+              curl -sSL --retry 3 -o /tmp/photo_src "$bg_url" || { echo "photo download failed for $out"; continue; }
+              OUT="$out" python3 -c 'import os;from PIL import Image;im=Image.open("/tmp/photo_src").convert("RGB");w,h=im.size;im=im.resize((1200,int(h*1200/w)),Image.LANCZOS) if w>1200 else im;im.save(os.environ["OUT"],"JPEG",quality=85,optimize=True);print("photo",os.environ["OUT"],im.size)'
+              git add "$out"; continue
+            fi
             if [ -n "$bg_url" ]; then bg="${out%.png}_bg.jpg"; curl -sSL --retry 3 -o "$bg" "$bg_url" || { echo "bg download failed for $out"; bg=""; }; fi
             REQ="$f" OUT="$out" BG="$bg" node -e '
               const fs=require("fs");const r=JSON.parse(fs.readFileSync(process.env.REQ,"utf8"));
