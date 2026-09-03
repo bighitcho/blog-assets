@@ -302,3 +302,17 @@ PC 세션에서 `daily_run.py` 프롬프트의 "먼저 읽어라" 목록에 이 
 
 템플릿: 0 = 좌측 텍스트·우측 사진 살림 / 1 = 하단 텍스트·상단 사진 / 2 = 중앙 텍스트·가장자리 사진. dim 0.45~0.6.
 (GitHub 커넥터가 있는 세션에서는 `actions_run_trigger`(workflow_id thumb.yml, inputs out/bg_url/spec)로 즉시 디스패치해도 된다.)
+
+### 11-6. 본문 이미지 — 소주제마다 사진 (2026-09-03 사장님 지시)
+
+대표 썸네일만으로는 부족하다. **글 하나에 본문 사진 2~3장**을 소주제(H2)에 맞춰 넣는다.
+
+1. 어떤 H2 아래에 어떤 장면이 어울리는지 먼저 정한다(계산 섹션 → 앱 결제 장면, 환급 섹션 → 시장 장보기, 동선 섹션 → 그 길의 풍경 등).
+2. Higgsfield `generate_image_batch`(soul_location, 16:9)로 한 번에 생성한다. 프롬프트 끝에 "editorial photograph, no text, no logos, no signs".
+3. `thumb_requests/<blog>_<slug>_p1.json` 처럼 요청 파일을 쓰되 **`"mode":"photo"`** 를 넣는다:
+   `{"mode":"photo","out":"batch_YYYYMMDD/<blog>_<slug>_p1.jpg","bg_url":"<result_url>"}`
+   (합성 없이 내려받아 폭 1200px JPEG 로 저장된다.) 썸네일 요청과 같이 push 하면 한 번에 렌더된다.
+4. 본문에는 해당 H2 바로 아래 첫 문단 뒤에 넣는다:
+   `<figure style="margin:18px 0;"><img src="<raw URL>" alt="<장면을 문장으로>" style="width:100%;height:auto;border-radius:8px;" loading="lazy" /><figcaption style="font-size:13px;color:#777;margin-top:6px;">▲ <한 줄 설명></figcaption></figure>`
+   alt 는 키워드 나열이 아니라 장면 설명. 캡션은 본문 내용과 이어지는 한 줄.
+5. 이미지 없이 글을 올리지 않는다. 8분 넘게 렌더가 안 오면 썸네일만으로 초안을 만들고 보고에 "본문 이미지 미삽입"을 적는다.
