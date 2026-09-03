@@ -62,7 +62,7 @@ function buildHtml(spec) {
   const P = PALETTES[pi];
   const cleanT = (spec.title || "").replace(/\*\*/g, "");
   const isLatin = /^[\x00-\x7F\u2013\u2014\u2018\u2019\u201C\u201D\u00B7]*$/.test(cleanT);
-  const disp = isLatin ? "'Noto Sans KR'" : DISPLAY[(pi + ti) % DISPLAY.length];
+  const disp = isLatin ? "'Liberation Sans','DejaVu Sans',Arial,sans-serif" : DISPLAY[(pi + ti) % DISPLAY.length];
   const wt = isLatin ? "900" : "normal";
   const kicker = esc(spec.kicker || "");
   const brand = esc(spec.brand || "");
@@ -71,8 +71,8 @@ function buildHtml(spec) {
   const shadow = "0 3px 22px rgba(0,0,0,.35)";
   const common = `
    em{font-style:normal;color:${P.accent}}
-   .brand{position:absolute;bottom:44px;left:80px;font:900 26px 'Noto Sans KR';letter-spacing:1px;opacity:.9}
-   .kick{display:inline-block;font:900 26px 'Noto Sans KR';color:#111;background:${P.accent};padding:8px 18px;border-radius:999px;letter-spacing:1px}
+   .brand{position:absolute;bottom:44px;left:80px;font:900 26px 'Noto Sans KR','Liberation Sans','DejaVu Sans',sans-serif;letter-spacing:1px;opacity:.9}
+   .kick{display:inline-block;font:900 26px 'Noto Sans KR','Liberation Sans','DejaVu Sans',sans-serif;color:#111;background:${P.accent};padding:8px 18px;border-radius:999px;letter-spacing:1px}
    .hook{display:inline-block;font:${wt} 64px ${disp},'Noto Sans KR';color:#111;background:${P.accent};padding:6px 28px;border-radius:18px;box-shadow:${shadow};line-height:1.15}
    ${deco(P)}`;
 
