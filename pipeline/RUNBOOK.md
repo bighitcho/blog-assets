@@ -283,19 +283,22 @@ PC 세션에서 `daily_run.py` 프롬프트의 "먼저 읽어라" 목록에 이 
 
 ### 썸네일 v3 규칙 — 주제 이미지 배경 + 블러 + 텍스트 강조 (2026-09-03 사장님 지침)
 "PPT 같은" 단색·그라디언트 썸네일 금지. **주제에 맞는 생성 이미지를 배경에 깔고, 블러·어둡게 처리한 뒤 텍스트를 크게 얹는다.**
+합성은 GitHub Actions(`thumb.yml`)가 한다 — 클라우드 컨테이너는 이미지 CDN 접근이 막혀 있다. **GitHub 커넥터는 필요 없다. git push 만 있으면 된다.**
 
-절차 (클라우드 컨테이너는 이미지 CDN 접근이 막혀 있으므로 합성은 GitHub Actions에서 한다):
 1. **배경 생성**: Higgsfield 커넥터 `generate_image_batch`(model `soul_location`, aspect_ratio `16:9`, 글당 1장, 약 0.12크레딧).
    프롬프트 공식: "<주제 장면>, <계절/시간대/조명>, editorial photograph, shallow depth of field, no text, no logos, no signs".
-   예) 온누리상품권 → "Korean traditional market street during Chuseok, stalls piled with apples, pears, gift boxes, warm lantern light, shoppers softly blurred, editorial photograph, no text"
-   `jobs_wait` 로 완료 확인 → `result_url` 확보.
-2. **합성 디스패치**: GitHub 커넥터 `actions_run_trigger`(owner bighitcho, repo blog-assets, workflow_id `thumb.yml`, ref master) inputs:
-   - `out`: `batch_YYYYMMDD/<blog>_<slug>.png`
-   - `bg_url`: 1번의 result_url
-   - `spec`: JSON 문자열 `{"kicker":..,"title":"..\n**강조**..","hook":"숫자·날짜","brand":..,"template":0~2,"palette":0~5,"blur":3~5,"dim":0.45~0.6}`
-3. `actions_list`(list_workflow_runs, resource_id thumb.yml)로 완료(success) 확인 → `cd /home/user/blog-assets && git pull` → Read 로 PNG 열어 확인.
-   글자가 안 읽히면 `dim` 을 올리거나 `template` 을 바꿔 다시 디스패치한다.
+   `jobs_wait` 로 완료 확인 → `result_url` 확보. (이 URL은 컨테이너에서 못 연다. 열려고 하지 마라.)
+2. **요청 파일 작성 + push**: `/home/user/blog-assets/thumb_requests/<blog>_<slug>.json`
+   ```
+   {"out":"batch_YYYYMMDD/<blog>_<slug>.png","bg_url":"<result_url>",
+    "spec":{"kicker":"..","title":"..\n**강조**..","hook":"숫자·날짜","brand":"..","template":0,"palette":0,"blur":4,"dim":0.5}}
+   ```
+   여러 글이면 파일을 여러 개 만들어 한 번에 push 한다. `git add thumb_requests && git commit -m "thumb request" && git push origin HEAD:master`
+   (거부되면 `git pull --rebase origin master` 후 재시도.)
+3. **대기 후 pull**: 60초마다 `git pull -q --rebase origin master` 하면서 `out` 경로의 PNG가 생길 때까지 기다린다(보통 2~3분, 최대 8분).
+   생기면 Read 로 열어 글자가 잘 읽히는지 확인. 안 읽히면 `dim` 을 올리거나 `template` 을 바꿔 요청 파일을 다시 push.
+   8분 넘게 안 생기면 그 글은 로컬 폴백(`node cloud_thumb.cjs spec.json`, bg 없이)으로 만들어 push 하고 보고에 한 줄 적는다.
 4. 공개 URL = `https://raw.githubusercontent.com/bighitcho/blog-assets/master/<out>`. 배경 원본은 `<out>_bg.jpg` 로 같이 커밋된다.
 
-템플릿: 0 = 좌측 텍스트·우측 사진 살림 / 1 = 하단 텍스트·상단 사진 / 2 = 중앙 텍스트·가장자리 사진.
-로컬에서 배경 없이 돌리면(`bg` 생략) 그라디언트 폴백이 나오는데, 이건 **긴급 대체용**이지 기본이 아니다.
+템플릿: 0 = 좌측 텍스트·우측 사진 살림 / 1 = 하단 텍스트·상단 사진 / 2 = 중앙 텍스트·가장자리 사진. dim 0.45~0.6.
+(GitHub 커넥터가 있는 세션에서는 `actions_run_trigger`(workflow_id thumb.yml, inputs out/bg_url/spec)로 즉시 디스패치해도 된다.)
