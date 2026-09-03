@@ -15,7 +15,7 @@ const fs = require('fs');
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
-const GF = "https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Jua&family=Noto+Sans+KR:wght@500;700;900&display=swap";
+const GF = "https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Jua&family=Anton&family=Noto+Sans+KR:wght@500;700;900&display=swap";
 
 // 6 팔레트 — 전부 진한 배경 + 강한 강조색 (연한 크림 배경 없음)
 const PALETTES = [
@@ -35,9 +35,13 @@ function pick(spec, key, mod) {
   return h % mod;
 }
 function fontFor(rawTitle, availPx) {
-  const lines = (rawTitle || "").replace(/\*\*/g, "").split("\n");
+  const clean = (rawTitle || "").replace(/\*\*/g, "");
+  const lines = clean.split("\n");
+  const latin = /^[\x00-\x7F\u2013\u2014\u2018\u2019\u201C\u201D\u00B7]*$/.test(clean);
   const maxLen = Math.max(1, ...lines.map(l => l.length));
-  return Math.max(48, Math.min(96, Math.floor(availPx / maxLen)));
+  const perChar = latin ? availPx / (maxLen * 0.55) : availPx / maxLen; // 라틴은 글자폭이 좁다
+  const cap = lines.length <= 2 ? (latin ? 132 : 104) : 92;
+  return Math.max(48, Math.min(cap, Math.floor(perChar)));
 }
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function titleHtml(raw){ return esc(raw || "").replace(/\*\*(.+?)\*\*/g, "<em>$1</em>").replace(/\n/g, "<br>"); }
@@ -56,7 +60,9 @@ function buildHtml(spec) {
   const pi = pick(spec, "palette", PALETTES.length);
   const ti = pick(spec, "template", 4);
   const P = PALETTES[pi];
-  const disp = DISPLAY[(pi + ti) % DISPLAY.length];
+  const cleanT = (spec.title || "").replace(/\*\*/g, "");
+  const isLatin = /^[\x00-\x7F\u2013\u2014\u2018\u2019\u201C\u201D\u00B7]*$/.test(cleanT);
+  const disp = isLatin ? "'Anton'" : DISPLAY[(pi + ti) % DISPLAY.length];
   const kicker = esc(spec.kicker || "");
   const brand = esc(spec.brand || "");
   const hook = esc(spec.hook || "");
