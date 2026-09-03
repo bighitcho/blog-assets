@@ -1,0 +1,61 @@
+name: thumb
+# 주제 이미지 배경 썸네일 합성. 클라우드 컨테이너는 이미지 CDN 접근이 막혀 있어 여기서 합성한다.
+# 입력: out(레포 상대경로 png), bg_url(생성 이미지 URL), spec(JSON: kicker/title/hook/brand/template/palette/blur/dim)
+on:
+  workflow_dispatch:
+    inputs:
+      out:
+        description: "출력 PNG 레포 상대경로 (예: batch_20260903/mydooba_foo.png)"
+        required: true
+      bg_url:
+        description: "배경 이미지 URL (없으면 그라디언트 폴백)"
+        required: false
+        default: ""
+      spec:
+        description: "JSON spec (kicker,title,hook,brand,template,palette,blur,dim)"
+        required: true
+permissions:
+  contents: write
+concurrency:
+  group: thumb-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fonts (Korean fallback) + playwright
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra >/dev/null
+          npm i --no-save playwright@1.56.1 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+      - name: Download background
+        if: ${{ inputs.bg_url != '' }}
+        run: |
+          mkdir -p "$(dirname "${{ inputs.out }}")"
+          bg="${{ inputs.out }}"; bg="${bg%.png}_bg.jpg"
+          curl -sSL --retry 3 -o "$bg" "${{ inputs.bg_url }}"
+          file "$bg"; echo "BG=$bg" >> "$GITHUB_ENV"
+      - name: Compose spec and render
+        env:
+          SPEC: ${{ inputs.spec }}
+          OUT: ${{ inputs.out }}
+        run: |
+          node -e '
+            const fs=require("fs");
+            const spec=JSON.parse(process.env.SPEC);
+            spec.out=process.env.OUT;
+            if(process.env.BG) spec.bg=process.env.BG;
+            fs.writeFileSync("/tmp/spec.json", JSON.stringify(spec));
+          '
+          node pipeline/cloud_thumb.cjs /tmp/spec.json
+      - name: Commit result
+        run: |
+          git config user.email "actions@github.com"; git config user.name "thumb-bot"
+          git add "${{ inputs.out }}" ${BG:+"$BG"}
+          git commit -m "thumb: ${{ inputs.out }}" || { echo "nothing to commit"; exit 0; }
+          for i in 1 2 3 4; do git pull --rebase origin master && git push origin HEAD:master && break || sleep $((2**i)); done
