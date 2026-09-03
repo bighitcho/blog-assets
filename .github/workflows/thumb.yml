@@ -60,7 +60,9 @@ jobs:
             if [ "$mode" = "photo" ]; then
               # 본문 사진: 합성 없이 내려받아 폭 1200px JPEG(q85)로 저장
               curl -sSL --retry 3 -o /tmp/photo_src "$bg_url" || { echo "photo download failed for $out"; continue; }
-              OUT="$out" python3 -c 'import os;from PIL import Image;im=Image.open("/tmp/photo_src").convert("RGB");w,h=im.size;im=im.resize((1200,int(h*1200/w)),Image.LANCZOS) if w>1200 else im;im.save(os.environ["OUT"],"JPEG",quality=85,optimize=True);print("photo",os.environ["OUT"],im.size)'
+              # 선택: "crop":[left,top,right,bottom] (0~1 비율) — AI 사진의 깨진 표지판·인물 조각 등을 잘라낸다
+              crop=$(node -pe 'const c=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).crop;Array.isArray(c)&&c.length===4?c.join(","):""' "$f")
+              OUT="$out" CROP="$crop" python3 -c 'import os;from PIL import Image;im=Image.open("/tmp/photo_src").convert("RGB");w,h=im.size;c=os.environ.get("CROP","");im=im.crop(tuple(int(float(v)*d) for v,d in zip(c.split(","),(w,h,w,h)))) if c else im;w,h=im.size;im=im.resize((1200,int(h*1200/w)),Image.LANCZOS) if w>1200 else im;im.save(os.environ["OUT"],"JPEG",quality=85,optimize=True);print("photo",os.environ["OUT"],im.size,"crop=",c)'
               git add "$out"; continue
             fi
             if [ -n "$bg_url" ]; then bg="${out%.png}_bg.jpg"; curl -sSL --retry 3 -o "$bg" "$bg_url" || { echo "bg download failed for $out"; bg=""; }; fi

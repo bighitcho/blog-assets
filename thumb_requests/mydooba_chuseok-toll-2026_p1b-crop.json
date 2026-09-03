@@ -1,0 +1,11 @@
+{
+ "mode": "photo",
+ "out": "batch_20260903/mydooba_chuseok-toll-2026_p1b.jpg",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260903_161056_427db8af-8d9a-479f-9ce2-a151e63cdc7a.png",
+ "crop": [
+  0,
+  0.2,
+  0.8,
+  1.0
+ ]
+}

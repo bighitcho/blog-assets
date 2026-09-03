@@ -312,6 +312,7 @@ PC 세션에서 `daily_run.py` 프롬프트의 "먼저 읽어라" 목록에 이 
 3. `thumb_requests/<blog>_<slug>_p1.json` 처럼 요청 파일을 쓰되 **`"mode":"photo"`** 를 넣는다:
    `{"mode":"photo","out":"batch_YYYYMMDD/<blog>_<slug>_p1.jpg","bg_url":"<result_url>"}`
    (합성 없이 내려받아 폭 1200px JPEG 로 저장된다.) 썸네일 요청과 같이 push 하면 한 번에 렌더된다.
+   사진에 깨진 표지판·인물 조각이 있으면 `"crop":[left,top,right,bottom]`(0~1 비율)을 넣어 잘라낸다. 예) 상단 20%·우측 20% 제거 = `[0,0.2,0.8,1.0]`. 같은 out 으로 다시 요청하면 덮어쓴다(요청 파일명만 다르게).
 4. 본문에는 해당 H2 바로 아래 첫 문단 뒤에 넣는다:
    `<figure style="margin:18px 0;"><img src="<raw URL>" alt="<장면을 문장으로>" style="width:100%;height:auto;border-radius:8px;" loading="lazy" /><figcaption style="font-size:13px;color:#777;margin-top:6px;">▲ <한 줄 설명></figcaption></figure>`
    alt 는 키워드 나열이 아니라 장면 설명. 캡션은 본문 내용과 이어지는 한 줄.
