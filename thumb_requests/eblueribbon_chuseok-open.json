@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/eblueribbon_chuseok-open.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_030020_89ffa6d4-18db-4819-9106-f9f8bd6d7a47.png",
+ "spec": {
+  "kicker": "CHUSEOK 2026 · SEOUL",
+  "title": "What Stays **Open**\n24-27 September",
+  "hook": "Shops close, transport does not",
+  "brand": "eblueribbon.com",
+  "template": 0,
+  "palette": 1,
+  "blur": 4,
+  "dim": 0.58
+ }
+}
