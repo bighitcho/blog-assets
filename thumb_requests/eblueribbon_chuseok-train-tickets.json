@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/eblueribbon_chuseok-train-tickets.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_024328_886d5fe7-855b-491a-a754-28ad689b5178.png",
+ "spec": {
+  "kicker": "CHUSEOK 2026 · KOREA RAIL",
+  "title": "Tickets Open **7 September**\nSRT App **No Longer Works**",
+  "hook": "KTX-SRT merged 1 Sept",
+  "brand": "eblueribbon.com",
+  "template": 1,
+  "palette": 1,
+  "blur": 4,
+  "dim": 0.55
+ }
+}

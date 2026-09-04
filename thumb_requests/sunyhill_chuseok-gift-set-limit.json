@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/sunyhill_chuseok-gift-set-limit.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_024328_cf8c6ff1-dbc4-4046-a7af-6ea61835dd2a.png",
+ "spec": {
+  "kicker": "2026 추석 선물 가액 한도",
+  "title": "농축수산물 **30만원**\n기준은 **발송일**이다",
+  "hook": "9월 1일~30일 한시 상향",
+  "brand": "sunyhill.com",
+  "template": 1,
+  "palette": 2,
+  "blur": 4,
+  "dim": 0.55
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/mydooba_chuseok-train-ticket.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_024328_2613a0fc-0ba8-4110-8a4f-fc8fed54a113.png",
+ "spec": {
+  "kicker": "2026 추석 기차표 예매",
+  "title": "9월 7일 **오전 7시**부터\n서울~부산 **5,400원** 싸졌다",
+  "hook": "노선별 예매일 · 결제 마감 9/15",
+  "brand": "mydooba.com",
+  "template": 0,
+  "palette": 0,
+  "blur": 4,
+  "dim": 0.55
+ }
+}
