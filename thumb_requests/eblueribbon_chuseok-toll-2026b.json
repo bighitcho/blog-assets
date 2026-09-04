@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260903/eblueribbon_chuseok-toll-2026b.png",
+ "bg_url": "https://raw.githubusercontent.com/bighitcho/blog-assets/master/batch_20260903/eblueribbon_chuseok-toll-2026_bg.jpg",
+ "spec": {
+  "kicker": "CHUSEOK 2026 · KOREA EXPRESSWAYS",
+  "title": "Tolls Free **All 4 Days**\nMonday 28 Is a **Workday**",
+  "hook": "24–27 Sept waived",
+  "brand": "eblueribbon.com",
+  "template": 1,
+  "palette": 1,
+  "blur": 4,
+  "dim": 0.55
+ }
+}
