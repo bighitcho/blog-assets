@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/sunyhill_leftover.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_025903_a2a62d45-976e-402d-811f-880f13661bd9.png",
+ "spec": {
+  "kicker": "명절 남은 음식",
+  "title": "전은 **냉동**, 나물은 **냉장**\n같이 두면 둘 다 상한다",
+  "hook": "품목별 보관 한계 일수",
+  "brand": "sunyhill.com",
+  "template": 0,
+  "palette": 5,
+  "blur": 4,
+  "dim": 0.55
+ }
+}

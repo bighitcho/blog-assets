@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/sunyhill_songpyeon.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_025903_e0c99035-05fa-49e6-bdf2-d0005ce1a67d.png",
+ "spec": {
+  "kicker": "송편 만들기",
+  "title": "반죽은 **익반죽**\n갈라지는 건 **물 온도** 탓",
+  "hook": "쌀가루 1kg 기준 배합",
+  "brand": "sunyhill.com",
+  "template": 1,
+  "palette": 2,
+  "blur": 4,
+  "dim": 0.55
+ }
+}
