@@ -79,10 +79,14 @@ function buildHtml(spec) {
   const wt = latin ? "900" : "normal";
   const kicker = esc(spec.kicker || ""), brand = esc(spec.brand || ""), hook = esc(spec.hook || "");
   const title = titleHtml(spec.title || "");
-  const blur = Number.isFinite(spec.blur) ? spec.blur : 5;
-  const dim = Number.isFinite(spec.dim) ? spec.dim : 0.55;
+  // 2026-09-04 사장님 지적: "4일 발행건이 다 뒷배경 이미지가 너무 어두워 배경사진이 잘 안 보인다."
+  // 원인: brightness(1-dim) 과 아래 .ov 그라디언트가 곱해져 하단에서 원본이 7%까지만 남았다.
+  // 기본값을 낮추고, 요청 JSON 이 과하게 잡아도 상한(dim 0.40 / blur 4)에서 자른다.
+  // 가독성은 글자 외곽 그림자(shadow)를 진하게 해서 유지한다.
+  const blur = Math.min(Number.isFinite(spec.blur) ? spec.blur : 3, 4);
+  const dim = Math.min(Number.isFinite(spec.dim) ? spec.dim : 0.28, 0.40);
   const bg = bgDataUrl(spec.bg);
-  const shadow = "0 4px 26px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.6)";
+  const shadow = "0 2px 10px rgba(0,0,0,.85), 0 6px 30px rgba(0,0,0,.7), 0 1px 2px rgba(0,0,0,.9)";
 
   // 배경: 사진(블러+어둡게) 또는 폴백 그라디언트
   const bgCss = bg
@@ -104,7 +108,7 @@ function buildHtml(spec) {
     // A. 좌측 정렬 + 좌→우 어두운 그라디언트 (사진은 오른쪽에 살아있음)
     const FS = fontFor(spec.title, 900);
     layout = `${common}
-     .ov{background:linear-gradient(90deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.55) 45%,rgba(0,0,0,.08) 100%)}
+     .ov{background:linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.34) 45%,rgba(0,0,0,.04) 100%)}
      .wrap{position:absolute;left:80px;top:78px;right:120px}
      h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.16;margin-top:26px}
      .hk{position:absolute;left:80px;bottom:60px}
@@ -114,7 +118,7 @@ function buildHtml(spec) {
     // B. 하단 앵커 + 아래→위 그라디언트 (사진 상단이 넓게 보임)
     const FS = fontFor(spec.title, 1000);
     layout = `${common}
-     .ov{background:linear-gradient(180deg,rgba(0,0,0,.10) 0%,rgba(0,0,0,.45) 45%,rgba(0,0,0,.85) 100%)}
+     .ov{background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.28) 45%,rgba(0,0,0,.58) 100%)}
      .wrap{position:absolute;left:80px;right:80px;bottom:120px}
      h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.14;margin-top:22px}
      .hk{position:absolute;right:80px;top:70px}
@@ -124,7 +128,7 @@ function buildHtml(spec) {
     // C. 중앙 + 가운데 어두운 패널(반투명) — 사진은 테두리에서 보임
     const FS = fontFor(spec.title, 920);
     layout = `${common}
-     .ov{background:radial-gradient(ellipse at center,rgba(0,0,0,.72) 0%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.25) 100%)}
+     .ov{background:radial-gradient(ellipse at center,rgba(0,0,0,.50) 0%,rgba(0,0,0,.36) 55%,rgba(0,0,0,.14) 100%)}
      .wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 90px}
      h1{font:${wt} ${FS}px ${disp},'Noto Sans KR';line-height:1.14;margin:24px 0 28px}
      .brand{left:0;right:0;bottom:44px;text-align:center}`;
