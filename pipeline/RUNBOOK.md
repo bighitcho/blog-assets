@@ -464,13 +464,22 @@ PC 세션에서 `daily_run.py` 프롬프트의 "먼저 읽어라" 목록에 이 
 - 영어 사이트(eblueribbon)는 §13-1 말투를 지키되, 위 규칙은 동일하게 적용한다.
 
 ### 14-4. 사이트 셋팅 (기술 SEO) — 상태와 기준
-2026-09-04 실측:
+2026-09-04 실측 → **같은 날 조치 완료**:
 
 | 항목 | mydooba | sunyhill | eblueribbon |
 |---|---|---|---|
-| SEO 플러그인 | **Rank Math 활성** | ❌ 없음 | ❌ 없음 |
-| Site Kit(GSC 연동) | 활성 | 활성 | 활성 |
+| SEO 플러그인 | Rank Math 1.0.277.2 활성 | **Rank Math 설치·활성(09-04)** | **Rank Math 설치·활성(09-04)** |
+| Site Kit(GSC 연동) | 활성 | 활성 1.186.0 | 활성 1.186.0 |
 | ads.txt / 동의배너 | 활성 | 활성 | 활성 |
+
+**Rank Math 최초 1회 설정(wp-admin 에서 사람이 해야 하는 부분)** — 플러그인 설치·활성화는 MCP 로 되지만
+설정 마법사는 안 된다. sunyhill·eblueribbon 각각 `wp-admin → Rank Math SEO → Setup Wizard`:
+1. 모드 **Advanced**, 사이트 유형 **Blog**(eblueribbon 은 언어 English)
+2. Google Search Console 연결(Site Kit 이 이미 붙어 있으면 계정 선택만)
+3. Sitemap **ON** (posts·pages·categories 포함, tags 는 OFF — 얇은 페이지 색인 방지)
+4. Schema 기본값: 글=**Article**, 사이트=**Organization**(이름·로고), BreadcrumbList **ON**
+5. 제목 템플릿 `%title% %sep% %sitename%`, 메타설명은 글마다 직접 작성(자동 생성 OFF)
+6. noindex: 태그 아카이브·검색결과·작성자 아카이브 ON / 글·카테고리는 절대 OFF 금지
 
 - **JSON-LD 주의**: `seo_enrich.py` 는 Article + FAQPage 를 본문에 넣지만, 워드프레스는 본문 안의
   `<script>` 를 지워 버릴 수 있다. 2026-09-04 발행분에는 구조화 데이터가 실제로 없었다.
