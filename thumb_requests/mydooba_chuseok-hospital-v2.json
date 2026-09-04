@@ -1,0 +1,14 @@
+{
+ "out": "batch_20260904/mydooba_chuseok-hospital.png",
+ "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3GD89tLLt5LOordfu5EMP69vYBY/hf_20260904_025903_a7e2aa80-9d6b-4a64-9617-6bfa9338e023.png",
+ "spec": {
+  "kicker": "추석 연휴 병원·약국",
+  "title": "문 여는 곳 찾는 법\n**129** · **응급의료포털**",
+  "hook": "9/24~27 · 앱·전화로 즉시 확인",
+  "brand": "mydooba.com",
+  "template": 2,
+  "palette": 4,
+  "blur": 4,
+  "dim": 0.58
+ }
+}
