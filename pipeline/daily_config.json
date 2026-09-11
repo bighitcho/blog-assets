@@ -1,0 +1,43 @@
+{
+  "_설명": "daily_run.py 가 읽는 유일한 설정. 편수만 바꾸면 된다. 0 이면 그 블로그는 건너뛴다.",
+  "_개정_20260910_최종": "사장님 2026-09-10 최종 확정: 블로그당 하루 1편(예약 없이 즉시발행), 시작 06:00 KST, 워드프레스 3개 + 블로그스팟 11개 전부 빠짐없이 꾸준히. 계기: 2026-09-09 07:01 KST tera-company.blogspot.com 이 구글 애드센스에서 '가치가 별로 없는 콘텐츠'로 판정됨(jenyjelly·golden628 에 이어 세 번째 같은 사례) — '즉시1+예약다수'로 몰아 찍는 9/5 결정(counts=3)을 대체한다. 다시 3편으로 올리지 말 것. §14 SEO/AEO/GEO 기준과 셀프 검수는 계속 엄격히 지킨다.",
+  "_워드프레스_3개_안내": "mydooba·sunyhill·eblueribbon 은 이제 클라우드의 별도 Claude Code Remote 루틴(trig_018Be25BTMCTdb3wonu3LQfD, 매일 06:00 KST, 사이트당 1편)이 전담 발행한다 — 이 daily_run.py 와 이중 발행되는 걸 막기 위해 이 파일에서는 세 곳 모두 0으로 둔다. 블로그스팟 11개(goldnforest 포함, greencap 제외)만 이 daily_run.py 가 발행한다.",
+  "_9월4일_근본원인": "8개 블로그(tera-company, golden628, wwwesg, sunyhill, mydooba, eblueribbon, house-sunyhill, car-sunyhill)가 '계획 실패 — 0편'으로 끝난 진짜 원인을 daily_run.py 코드에서 찾았다: claude_p() 가 시간초과(TimeoutExpired)를 만나면 MODEL_FALLBACK(opus→sonnet→haiku) 을 한 번도 안 타고 그 자리에서 바로 return 해 버리는 버그였다. 이 패치는 유효하고 되돌리지 않는다.",
+  "_9월6일_사용한도_대기_연장": "2026-09-06 실사고: 계정 사용한도(spend)에 걸렸는데 5분씩 2~3회(10~15분)만 재시도하고 포기해 여러 블로그가 '계획 실패 — 0편'으로 끝났다. daily_run.py 를 고쳐(claude_p_patient) 이제 사용한도를 만나면 usage_limit_wait_count 회(기본 8회) × usage_limit_wait_sec 초(기본 300초=5분) = 최대 40분을 별도로 기다린 뒤에도 안 풀리면 그때 포기한다.",
+  "_9월10일_편수축소_근거": "9/6~9/9 사용한도 충돌로 여러 블로그가 며칠씩 0편으로 비었고, 그 공백이 tera-company 의 애드센스 '저가치 콘텐츠' 판정에 영향을 줬을 가능성이 크다. 편수를 1로 낮추면 (1) 계정 사용한도 부하 자체가 줄어 공백이 줄고 (2) 편당 셀프 검수 여력이 늘어난다. 근본적으로는 이 파이프라인의 claude_p() 를 Claude Code 구독 사용량과 분리된 별도 Anthropic API 키(종량제)로 옮기면 사용한도 충돌이 원천 차단된다 — 사장님이 API 키를 발급하면 그 경로를 추가할 것(RUNBOOK §12-5).",
+  "counts": {
+    "goldnforest": 1,
+    "siangold": 1,
+    "jenyjelly": 1,
+    "tera-company": 1,
+    "golden628": 1,
+    "wwwesg": 1,
+    "sunyhill": 0,
+    "mydooba": 0,
+    "eblueribbon": 0,
+    "house-sunyhill": 1,
+    "car-sunyhill": 1,
+    "well-sunyhill": 1,
+    "pet-sunyhill": 1,
+    "hobbyapp": 1,
+    "greencap": 0
+  },
+  "start": "06:00",
+  "gap_min": 240,
+  "plan_model": "sonnet",
+  "write_model": "opus",
+  "workers": 3,
+  "plan_retries": 1,
+  "plan_timeout": 180,
+  "write_timeout": 900,
+  "usage_limit_wait_count": 8,
+  "usage_limit_wait_sec": 300,
+  "_모델메모": "2026-09-11 변경: 계획=sonnet, 원고=opus (그 전엔 둘 다 fable). 이유는 두 가지다. (1) 사용한도 — fable 은 opus 의 약 2배, sonnet 의 약 5배 속도로 계정 한도를 태운다. 9/1 'fable 월 한도 초과로 그날 0편' 사고와 9/6~9/7 연속 '사용한도 감지'가 전부 여기서 왔다. (2) 품질 — 2026-09-10 에 같은 제목·같은 브리프로 실측해 보니 sonnet 원고도 직답·표·FAQ·형식·라벨을 다 지켰다. 다만 브리프의 문체 지시(~요체)를 놓쳤기에 그 구멍은 코드(tone_check)로 막았다. 조사 깊이가 필요한 원고만 opus 로 두고 계획은 sonnet 이면 충분하다. 폴백은 위로 올라가지 않게 ['sonnet','haiku'] 로 바꿨다 — 계획은 sonnet→haiku, 원고는 opus→sonnet→haiku 로 내려간다.",
+  "model_fallback": [
+    "sonnet",
+    "haiku"
+  ],
+  "tone_check": true,
+  "_9월11일_문체검사": "daily_run.py 에 문체 검사기를 넣었다(brief_tone/tone_stats/tone_violation). 브리프의 '- **문체**:' 줄을 읽어 요구 어조(~요체/~습니다체/혼용/~다체)를 알아내고, 원고 본문 <p> 문장의 종결어미를 세어 어긋난 어조가 과반이면 안내문을 붙여 다시 쓰게 한다. 실제 발행본 151편으로 기준을 잡았다 — 정상 요체 글도 '~다' 문장을 20~36% 섞어 쓰므로 과반(50%)일 때만 잡는다(오탐 0건 확인). 재시도해도 안 고쳐지면 경고만 남기고 발행은 그대로 진행한다 — 문체 하나로 그 블로그를 0편으로 비우는 게 애드센스 관점에서 훨씬 나쁘기 때문이다. tone_check 를 false 로 두면 검사 자체를 끈다.",
+  "_비용실측_20260910": "계획 1회 + 원고 1회를 실제 프롬프트로 돌려 잰 값(사이트당 1편 기준, 재시도 15% 가산): fable 월 260만~360만원, opus 월 185만원, sonnet 월 82만원, haiku 월 47만원. 지금 조합(계획 sonnet + 원고 opus)은 월 165만원선. 구독 한도로 돌리면 이 돈은 안 나가지만 한도를 그만큼 태운다."
+}
