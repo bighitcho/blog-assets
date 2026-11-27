@@ -1,0 +1,77 @@
+<div id="gc-ebook">
+<style>
+#gc-ebook{--g:#1f5a3d;--o:#e8762c;font-family:'Noto Sans KR','Malgun Gothic',sans-serif;max-width:1180px;margin:0 auto;color:#222;-webkit-user-select:none;user-select:none}
+#gc-ebook .eb-head{text-align:center;margin:8px 0 18px}
+#gc-ebook .eb-head h2{font-size:26px;margin:0 0 6px;color:var(--g)}
+#gc-ebook .eb-head p{margin:0;color:#666;font-size:14px}
+#gc-ebook .eb-tabs{display:flex;gap:10px;justify-content:center;margin:0 0 14px;flex-wrap:wrap}
+#gc-ebook .eb-tab{border:2px solid var(--g);background:#fff;color:var(--g);padding:10px 18px;border-radius:30px;font-weight:700;cursor:pointer;font-size:15px}
+#gc-ebook .eb-tab.on{background:var(--g);color:#fff}
+#gc-ebook .eb-stage{position:relative;background:#eef2ef;border-radius:14px;padding:18px 54px;display:flex;justify-content:center;align-items:center;min-height:300px}
+#gc-ebook .eb-book{display:flex;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.18);background:#fff}
+#gc-ebook canvas{display:block;max-width:100%;height:auto;background:#fff}
+#gc-ebook .eb-book.spread canvas{max-width:50%}
+#gc-ebook .eb-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:none;background:var(--g);color:#fff;font-size:22px;cursor:pointer;opacity:.9}
+#gc-ebook .eb-nav:disabled{opacity:.25;cursor:default}
+#gc-ebook .eb-prev{left:6px}#gc-ebook .eb-next{right:6px}
+#gc-ebook .eb-bar{display:flex;justify-content:center;align-items:center;gap:14px;margin:12px 0;font-size:14px;color:#444;flex-wrap:wrap}
+#gc-ebook .eb-bar button{border:1px solid #bbb;background:#fff;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
+#gc-ebook .eb-thumbs{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px}
+#gc-ebook .eb-thumbs img{height:84px;border:2px solid transparent;border-radius:3px;cursor:pointer;flex:0 0 auto;pointer-events:auto}
+#gc-ebook .eb-thumbs img.on{border-color:var(--o)}
+#gc-ebook img{-webkit-user-drag:none;user-drag:none}
+#gc-ebook .eb-note{text-align:center;font-size:12px;color:#888;margin-top:6px}
+#gc-ebook.fs{position:fixed;inset:0;z-index:99999;max-width:none;background:#111;overflow:auto;padding:10px}
+#gc-ebook.fs .eb-stage{background:#111;min-height:calc(100vh - 150px)}
+#gc-ebook.fs .eb-head,#gc-ebook.fs .eb-thumbs{display:none}
+#gc-ebook.fs .eb-bar{color:#ddd}
+@media(max-width:720px){#gc-ebook .eb-stage{padding:10px 40px}#gc-ebook .eb-head h2{font-size:21px}}
+</style>
+<div class="eb-head"><h2>GREEN CAP 성과보고서</h2><p>화성시 청소년 ESG 교육 활동을 전자책으로 만나보세요</p></div>
+<div class="eb-tabs">
+<button class="eb-tab on" data-book="2026">2026 성과보고서 · 우리 학교에서 시작한 ESG</button>
+<button class="eb-tab" data-book="2025">2025 성과보고서 · JUNK ART 창작실천교육</button>
+</div>
+<div class="eb-stage">
+<button class="eb-nav eb-prev" aria-label="이전 쪽">‹</button>
+<div class="eb-book"></div>
+<button class="eb-nav eb-next" aria-label="다음 쪽">›</button>
+</div>
+<div class="eb-bar"><span class="eb-count"></span><button class="eb-fs">전체화면</button></div>
+<div class="eb-thumbs"></div>
+<div class="eb-note">이 전자책은 홈페이지에서 열람만 가능합니다. 무단 복제·배포를 금합니다. 문의 031-8058-0382</div>
+<script>
+(function(){
+var BASE='https://cdn.jsdelivr.net/gh/bighitcho/blog-assets@7edb2f8/greencap/ebook/';
+var BOOKS={'2026':54,'2025':40};
+var root=document.getElementById('gc-ebook'),bookEl=root.querySelector('.eb-book'),
+prev=root.querySelector('.eb-prev'),next=root.querySelector('.eb-next'),count=root.querySelector('.eb-count'),thumbs=root.querySelector('.eb-thumbs');
+var cur='2026',page=1,cache={};
+function url(b,p){return BASE+b+'/p'+(p<10?'0':'')+p+'.webp';}
+function img(b,p,cb){var k=b+p;if(cache[k]&&cache[k].complete){cb(cache[k]);return;}var i=cache[k]||new Image();cache[k]=i;i.onload=function(){cb(i)};if(!i.src)i.src=url(b,p);}
+function spread(){return window.innerWidth>900&&!root.classList.contains('single');}
+function pagesShown(){var n=BOOKS[cur];if(!spread()||page===1)return [page];if(page%2===1)page--;return page+1<=n?[page,page+1]:[page];}
+function draw(){var ps=pagesShown(),n=BOOKS[cur];bookEl.innerHTML='';bookEl.className='eb-book'+(ps.length>1?' spread':'');
+ps.forEach(function(p){var c=document.createElement('canvas');c.width=1100;c.height=1556;bookEl.appendChild(c);
+var maxH=root.classList.contains('fs')?window.innerHeight-170:Math.min(window.innerHeight-140,900);c.style.height=maxH+'px';c.style.width='auto';
+img(cur,p,function(i){c.width=i.naturalWidth;c.height=i.naturalHeight;c.getContext('2d').drawImage(i,0,0);});});
+count.textContent=(ps.length>1?ps[0]+'-'+ps[1]:ps[0])+' / '+n+' 쪽';
+prev.disabled=ps[0]<=1;next.disabled=ps[ps.length-1]>=n;
+[].forEach.call(thumbs.children,function(t,ix){t.classList.toggle('on',ps.indexOf(ix+1)>=0)});
+for(var k=1;k<=2;k++){var q=ps[ps.length-1]+k;if(q<=n)img(cur,q,function(){});}}
+function go(d){var ps=pagesShown(),n=BOOKS[cur];if(d>0){page=ps[ps.length-1]+1;}else{page=ps[0]-(spread()?2:1);if(spread()&&page>1&&page%2===1)page--;}page=Math.max(1,Math.min(n,page));draw();}
+function load(b){cur=b;page=1;thumbs.innerHTML='';for(var p=1;p<=BOOKS[b];p++){(function(p){var t=document.createElement('img');t.loading='lazy';t.src=url(b,p);t.alt=p+'쪽';t.onclick=function(){page=p;draw()};thumbs.appendChild(t)})(p);}
+[].forEach.call(root.querySelectorAll('.eb-tab'),function(x){x.classList.toggle('on',x.dataset.book===b)});draw();}
+prev.onclick=function(){go(-1)};next.onclick=function(){go(1)};
+[].forEach.call(root.querySelectorAll('.eb-tab'),function(x){x.onclick=function(){load(x.dataset.book)}});
+root.querySelector('.eb-fs').onclick=function(){root.classList.toggle('fs');this.textContent=root.classList.contains('fs')?'닫기':'전체화면';draw();};
+document.addEventListener('keydown',function(e){if(!root.offsetParent&&!root.classList.contains('fs'))return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key==='Escape'&&root.classList.contains('fs')){root.classList.remove('fs');root.querySelector('.eb-fs').textContent='전체화면';draw();}});
+var sx=null;bookEl.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+bookEl.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)go(dx<0?1:-1);sx=null});
+root.addEventListener('contextmenu',function(e){e.preventDefault()});
+root.addEventListener('dragstart',function(e){e.preventDefault()});
+var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(draw,150)});
+load('2026');
+})();
+</script>
+</div>
